@@ -13,11 +13,10 @@ pub struct CLI {
 }
 
 impl CLI {
-    pub fn glob_pattern(self) -> Option<&'static str> {
+    pub fn glob_pattern(self) -> String {
         // Returns the glob pattern
-        return Path::new(&self.path)           
-                            .join(self.pattern)
-                            .to_str();  
+        let posix_path = Path::new(&self.path).join(self.pattern);
+        posix_path.to_str().unwrap().to_string()
     }
 }
 
@@ -25,9 +24,9 @@ pub struct ParsedEmail<'a> {
     /*
     Email parsing data type that outputs a file name
     */
-    from: &'a HeaderValue<'a>,
-    date: Option<&'a MailDateTime>,
-    subject: String,
+    pub from: &'a HeaderValue<'a>,
+    pub date: Option<&'a MailDateTime>,
+    pub subject: String,
 }
 
 impl ParsedEmail<'_> {
@@ -35,16 +34,15 @@ impl ParsedEmail<'_> {
         let mail_address = match self.from {
             HeaderValue::Address(mail_address) => mail_address.address
                                                     .as_ref()
-                                                    .unwrap()
-                                                    .to_lowercase(),
+                                                    .unwrap(),
             _ => panic!("Oops! could not extract the sender's email address")
         };
-        return mail_address.to_lowercase();
+        mail_address.to_lowercase()
     }
 
     fn sent_at(&self) -> String {
         let dt = self.date.unwrap().to_iso8601();
-        return DateTime::parse_from_rfc3339(&dt).unwrap().to_string();
+        DateTime::parse_from_rfc3339(&dt).unwrap().to_string()
     }
 
     pub fn make_file_name(&self) -> String {
@@ -54,6 +52,6 @@ impl ParsedEmail<'_> {
         //Have to clone because we can't initialize a vec with mismatched typing
         let file_fmt = vec![dt, sender, subject_line.clone()];
         let file_out = file_fmt.join("_");
-        return file_out;
+        file_out
     }
 }

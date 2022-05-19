@@ -16,7 +16,7 @@ fn main() {
         path: dir_path,
     };
 
-    for entry in glob(cli_args.glob_pattern().unwrap()).expect("No matching files") {
+    for entry in glob(&cli_args.glob_pattern()).expect("No matching files") {
         match entry {
             Ok(path) => {
                 let posix_path = Path::new(&path);
@@ -29,8 +29,8 @@ fn main() {
                     date: message.get_date(),
                     subject: message.get_subject().unwrap().to_string(),
                 };
-                let out_path = parsed_email.make_file_name();
-                save_file(out_path, contents.as_bytes())
+                let filepath = parsed_email.make_file_name();
+                save_file(filepath, contents.as_bytes())
             },
             Err(e) => println!("{:?}", e),
         }
