@@ -28,7 +28,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "email-parser"
+name = "email-miner"
 version = "0.1.0"
 dependencies = [
  "chrono",
