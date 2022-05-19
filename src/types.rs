@@ -43,7 +43,7 @@ impl ParsedEmail<'_> {
 
     fn sent_at(&self) -> String {
         let dt = self.date.unwrap().to_iso8601();
-        DateTime::parse_from_rfc3339(&dt).unwrap().to_string()
+        DateTime::parse_from_rfc3339(&dt).unwrap().format("%Y-%m-%d").to_string()
     }
 
     pub fn make_file_name(&self) -> String {
