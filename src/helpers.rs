@@ -24,3 +24,9 @@ pub fn save_file(filepath: String, contents: &[u8]) {
         Ok(_) => println!("SUCCESS! Wrote file to {:?}", path.display()),
     }
 }
+
+pub fn get_file_extension(file_expression: &str) -> String {
+    let file_parts = file_expression.split(".");
+    let extension = file_parts.last().unwrap();
+    format!(".{}", extension.to_string())
+}

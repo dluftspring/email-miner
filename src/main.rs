@@ -3,16 +3,16 @@ use std::path::Path;
 use std::fs::read_to_string;
 use glob::glob;
 mod helpers;
-use helpers::save_file;
+use helpers::{get_file_extension, save_file};
 mod types;
 use types::{CLI, ParsedEmail};
 
 fn main() {
 
-    let glob_pattern = std::env::args().nth(1).expect("No pattern specified");
+    let pattern = std::env::args().nth(1).expect("No pattern specified");
     let dir_path = std::env::args().nth(2).expect("No directory specified");
     let cli_args = CLI {
-        pattern: glob_pattern,
+        pattern: pattern,
         path: dir_path,
     };
 
@@ -28,8 +28,11 @@ fn main() {
                     from: message.get_from(),
                     date: message.get_date(),
                     subject: message.get_subject().unwrap().to_string(),
+                    file_type: get_file_extension(path.to_str().unwrap())
                 };
-                let filepath = parsed_email.make_file_name();
+                let filename = parsed_email.make_file_name();
+                let parent_dir = posix_path.parent().unwrap();
+                let filepath = parent_dir.join("output").join(filename).to_str().unwrap().to_owned();
                 save_file(filepath, contents.as_bytes())
             },
             Err(e) => println!("{:?}", e),

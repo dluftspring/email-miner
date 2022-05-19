@@ -27,6 +27,7 @@ pub struct ParsedEmail<'a> {
     pub from: &'a HeaderValue<'a>,
     pub date: Option<&'a MailDateTime>,
     pub subject: String,
+    pub file_type: String,
 }
 
 impl ParsedEmail<'_> {
@@ -52,6 +53,6 @@ impl ParsedEmail<'_> {
         //Have to clone because we can't initialize a vec with mismatched typing
         let file_fmt = vec![dt, sender, subject_line.clone()];
         let file_out = file_fmt.join("_");
-        file_out
+        format!("{}{}", file_out, self.file_type)
     }
 }
